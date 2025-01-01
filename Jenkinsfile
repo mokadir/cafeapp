@@ -3,10 +3,6 @@ pipeline {
         label "buildAgent"	
     }
 	
-	tools {
-		nodejs 'node16'			
-	}
-	
 	stages {
 		stage ('Clean Workspace'){
 			steps {
@@ -21,22 +17,15 @@ pipeline {
 				git branch: 'dev', credentialsId: 'git-cred', url: 'https://github.com/mokadir/cafeapp.git'
 			}
 		}
-		
-		stage ('Compile'){
-			steps {
-                echo "****** Compile running....******"
-				sh "mvn compile"
-			}
-		}
-		
+/*		This app do not need compilation. its already compiled and ready to run. so no need to build it again.
 		stage ('Build Application'){
 			steps {
                 echo "****** Build Application running....******"
-				sh "mvn clean package -DskipTests=true"
+				sh "npm install"
 			}
 		}
 		
-/* 		stage('Code Coverage ') {
+ 		stage('Code Coverage ') {
 			steps {
 				echo "Running Code Coverage ..."
 				sh "mvn jacoco:report"
