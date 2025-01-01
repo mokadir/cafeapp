@@ -18,7 +18,7 @@ pipeline {
 		stage ('Git Checkout'){
 			steps {
                 echo "****** Git Checkout running....******"
-				git branch: 'dev', credentialsId: 'git-cred', url: 'https://github.com/mokadir/mkadirbank.git'
+				git branch: 'dev', credentialsId: 'git-cred', url: 'https://github.com/mokadir/cafeapp.git'
 			}
 		}
 		
@@ -93,7 +93,7 @@ pipeline {
 				script {
                     echo "****** Docker Build and Tag Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker build -t mskr7/mkadir-bankapp:latest} ."
+						sh "docker build -t mskr7/mkadir-cafeapp:latest} ."
 					}
 				}
 			}
@@ -112,14 +112,14 @@ pipeline {
 		} */
 
 /*     environment {  #environment variables for previous docker alternate stage
-		registry = "mskr7/mkadir-bankapp" 
+		registry = "mskr7/mkadir-cafeapp" 
 		registryCredential = 'docdocker-cred' 
 	} */
 		
 /* 		stage ('Docker Image Scan'){
 			steps {
                 echo "****** Docker Image Scan by Trivy running....******"
-				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-bankapp:latest}"
+				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:latest}"
 			}
 		} */
 		
@@ -128,7 +128,7 @@ pipeline {
 				script {
                     echo "****** Docker Push Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker push mskr7/mkadir-bankapp:latest}"
+						sh "docker push mskr7/mkadir-cafeapp:latest}"
 					}
 				}
 			}
@@ -137,7 +137,7 @@ pipeline {
 /* 		stage('Smoke Test') {
 			steps { 
 				echo "****** Smoke Test Image running....******"
-				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-bankapp:${params.DOCKER_TAG}"
+				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-cafeapp:latest}"
 				sh "docker rm --force smokerun"
 			}
 		} */
