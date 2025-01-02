@@ -34,7 +34,7 @@ pipeline {
  		stage ('Docker Image Scan'){
 			steps {
                 echo "****** Docker Image Scan by Trivy running....******"
-				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:2}"
+				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:2"
 			}
 		} 
 		
