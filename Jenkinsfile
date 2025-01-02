@@ -25,7 +25,7 @@ pipeline {
 				script {
                     			echo "****** Docker Build and Tag Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker build -t mskr7/mkadir-cafeapp:2 ."
+						sh "docker build -t mskr7/mkadir-cafeapp:3 ."
 					}
 				}
 			}
@@ -34,7 +34,7 @@ pipeline {
  		stage ('Docker Image Scan'){
 			steps {
                 echo "****** Docker Image Scan by Trivy running....******"
-				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:2"
+				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:3"
 			}
 		} 
 		
@@ -43,7 +43,7 @@ pipeline {
 				script {
                     			echo "****** Docker Push Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker push mskr7/mkadir-cafeapp:2"
+						sh "docker push mskr7/mkadir-cafeapp:3"
 					}
 				}
 			}
@@ -52,7 +52,7 @@ pipeline {
  		stage('Smoke Test') {
 			steps { 
 				echo "****** Smoke Test Image running....******"
-				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-cafeapp:2"
+				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-cafeapp:3"
 				sh "sleep 90"
 				sh "docker rm --force smokerun"
 			}
