@@ -17,65 +17,8 @@ pipeline {
 				git branch: 'dev', credentialsId: 'git-cred', url: 'https://github.com/mokadir/cafeapp.git'
 			}
 		}
-/*		This app do not need compilation. its already compiled and ready to run. so no need to build it again.
-		stage ('Build Application'){
-			steps {
-                echo "****** Build Application running....******"
-				sh "npm install"
-			}
-		}
+/*		This app do not need compilation. its already compiled and ready to run. so no need to build it again. */
 		
- 		stage('Code Coverage ') {
-			steps {
-				echo "Running Code Coverage ..."
-				sh "mvn jacoco:report"
-			} 
-		}
-				
-    	stage ('Unit Test'){
-			steps {
-				sh "mvn test -DskipTests=true" 
-			}
-		} 
-
-		
- 		stage ('File System Scan'){
-			steps {
-				sh "trivy fs --format table -o trivyscanfs.html ."
-			}
-		} 
-		
- 		stage('SAST') {
-			steps { 
-				echo "Running Static application security testing using SonarQube Scanner ..."
-				withSonarQubeEnv('mysonarqube') {
-					sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html'
-				}
-			}
-    }
-		
-		stage('QualityGates') { #need sonarqube webhook
-			steps { 
-				echo "Running Quality Gates to verify the code quality"
-				script {
-				  timeout(time: 1, unit: 'MINUTES') {
-					def qg = waitForQualityGate()		# jenkins will get serv & cred from previous stage
-					if (qg.status != 'OK') {
-					  error "Pipeline aborted due to quality gate failure: ${qg.status}"
-            }
-          }
-        }
-      }
-    }
-		
-		stage ('Building and Publish Nexus'){
-			steps {
-				withMaven(globalMavenSettingsConfig: 'maven-settings-mkadir', jdk: '', maven: 'maven3', mavenSettingsConfig: '', traceability: true){
-					sh "mvn deploy -DskipTests=true"
-				}
-			}
-		} 
-*/
 		
 		stage ('Docker Build & Tag'){
 			steps {
@@ -88,29 +31,12 @@ pipeline {
 			}
 		}
 
-        /* stage('Build Docker Image') { 			# alternate. better using functions insted of commands
-			steps { 
-				echo "Build Docker Image"
-				script {
-					   docker.withRegistry( '', registryCredential ) { 
-					        myImage = docker.build registry + ":$BUILD_NUMBER" 
-						    myImage.push()
-						}	
-				}
-			}
-		} */
-
-/*     environment {  #environment variables for previous docker alternate stage
-		registry = "mskr7/mkadir-cafeapp" 
-		registryCredential = 'docdocker-cred' 
-	} */
-		
-/* 		stage ('Docker Image Scan'){
+ 		stage ('Docker Image Scan'){
 			steps {
                 echo "****** Docker Image Scan by Trivy running....******"
-				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:latest}"
+				sh "trivy image --scanners vuln --format table -o trivyscandocr.html mskr7/mkadir-cafeapp:2}"
 			}
-		} */
+		} 
 		
 		stage ('Docker Push'){
 			steps {
@@ -123,13 +49,13 @@ pipeline {
 			}
 		}
 		
-/* 		stage('Smoke Test') {
+ 		stage('Smoke Test') {
 			steps { 
 				echo "****** Smoke Test Image running....******"
-				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-cafeapp:latest}"
+				sh "docker run -d --name smokerun -p 8080:8080 mskr7/mkadir-cafeapp:2}"
 				sh "docker rm --force smokerun"
 			}
-		} */
+		} 
 		
 		stage('Trigger Deployment'){
 			steps { 
