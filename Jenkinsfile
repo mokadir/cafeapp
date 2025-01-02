@@ -82,7 +82,7 @@ pipeline {
 				script {
                     echo "****** Docker Build and Tag Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker build -t mskr7/mkadir-cafeapp:latest} ."
+						sh "docker build -t mskr7/mkadir-cafeapp:2 ."
 					}
 				}
 			}
@@ -117,7 +117,7 @@ pipeline {
 				script {
                     echo "****** Docker Push Image running....******"
 					withDockerRegistry(credentialsId: 'docer-cred') {
-						sh "docker push mskr7/mkadir-cafeapp:latest}"
+						sh "docker push mskr7/mkadir-cafeapp:2"
 					}
 				}
 			}
